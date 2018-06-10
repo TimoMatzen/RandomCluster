@@ -1,0 +1,11 @@
+Package: RandomCluster
+Title: Package for the functions from my master thesis project on Random Cluster models and Random graphs
+Version: 0.0.0.9000
+Author: Timo Matzen
+Maintainer: Timo Matzen <timomatzen87@gmail.com>
+Description: This package is made to document my master thesis project after the Random Cluster model and the Random Graph. 
+Depends: R (>= 3.2.0)
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
