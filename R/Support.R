@@ -19,7 +19,7 @@ edges <- function(x) {
 # p: probability for an edge
 # q: cluster coefficient
 #
-# @keyword: internal
+# @keyword internal
 transition <- function(n.nodes, s, U, r ,p, q) {
   if (s[r] == 1) {
     s2 <- s
@@ -27,6 +27,7 @@ transition <- function(n.nodes, s, U, r ,p, q) {
     s2[r] <- 0
     # Apply transition function
     out <- RC(n.nodes, s2, p, q)/(RC(n.nodes, s, p, q) + RC(n.nodes, s2, p, q))
+    
     # Check whether to accept change
     s[r] <- 1 * !(U <= out)
     
@@ -101,7 +102,7 @@ SymMat <- function(m) {
 
 RC <- function(n.nodes, s, p, q) {
   # Create empty adjacency matrix
-  mat <- matrix(0,n,n)
+  mat <- matrix(0,n.nodes, n.nodes)
   # Fill upper tri with the state
   mat[upper.tri(mat)] <- s
   # Make matrix symmetric
@@ -111,6 +112,6 @@ RC <- function(n.nodes, s, p, q) {
   # Get number of components
   k <- components(net)$no
   # Calculate RC measure
-  out <- p^sum(s) * (1-p)^(1-sum(s)) * q^k
+  out <- p^sum(s) * (1-p)^(length(s)-sum(s)) * q^k
   return(out)
 }

@@ -4,20 +4,20 @@
 \alias{SampleRC}
 \title{Sample Random Cluster}
 \usage{
-SampleRC(p, q, n.edges, n.nodes, n.iter, verbose = TRUE)
+SampleRC(p, q, n.nodes, n.iter, verbose = TRUE, mat = FALSE)
 }
 \arguments{
 \item{p}{The probability of forming an edge}
 
 \item{q}{The cluster coefficient from the Random Cluster model}
 
-\item{n.edges}{The number of edges in the model}
-
 \item{n.nodes}{The number of nodes in the network}
 
 \item{n.iter}{The maximum number of iterations to run CFTP}
 
-\item{verbose}{Whether to print the progress.}
+\item{verbose}{Whether to print the progress}
+
+\item{mat}{Whether to return adjacency matrix}
 }
 \value{
 Returns a matrix with samples from the random cluster model.

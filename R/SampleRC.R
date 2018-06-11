@@ -7,23 +7,25 @@
 #' 
 #' @param p The probability of forming an edge
 #' @param q The cluster coefficient from the Random Cluster model
-#' @param n.edges The number of edges in the model
 #' @param n.nodes The number of nodes in the network
 #' @param n.iter The maximum number of iterations to run CFTP
-#' @param verbose Whether to print the progress.
+#' @param verbose Whether to print the progress
+#' @param mat Whether to return adjacency matrix
 #' 
 #' @return Returns a matrix with samples from the random cluster model.
 #' 
 #' @export
 #' 
-SampleRC <- function(p, q, n.edges, n.nodes, n.iter, verbose = TRUE) {
+SampleRC <- function(p, q, n.nodes, n.iter, verbose = TRUE, mat = FALSE) {
   
   # Starting at a higher number of runs when network is large.
-  if(n.nodes < 5 ) {
-    M <- 2^(0:10)
-  } else {
-    M <- 2^(5:10)
-  }
+  #if(n.nodes < 5 ) {
+   # M <- 2^(0:10)
+  #} else {
+  M <- 2^(5:20)
+  #}
+  # Calculate the number of edges
+  n.edges <- edges(n.nodes)
   
   # Matrix to save samples
   output <- matrix(1,ncol = n.edges, nrow = n.iter)
@@ -80,5 +82,16 @@ SampleRC <- function(p, q, n.edges, n.nodes, n.iter, verbose = TRUE) {
       print(iter)
     }
   }
-  return(output)
+  if (mat == FALSE) {
+    return(output)
+  } else {
+    # Create adjacency matrix
+    output.adjacency <- matrix(0, n.nodes, n.nodes)
+    # Save output in adjacency matrix
+    output.adjacency[upper.tri(output.adjacency)] <- s1
+    # Make matrix symmetrical
+    output.adjacency <- SymMat(output.adjacency)
+    # Return adjacency matrix
+    return(output.adjacency)
+  }
 }
