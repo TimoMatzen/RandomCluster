@@ -85,19 +85,19 @@ RandomnessRecycler <- function(n.nodes, p, q) {
         # Create a spanning tree of the nodes that are deleted
         
         # Make a edgelist
-        #x.edge <- as_edgelist(graph)
+        x.edge <- as_edgelist(graph)
         #a <- Et[apply(Et, 1, function(r) any(r %in% w)),, drop = FALSE]
         #a <-  Et[apply(Et, 1, function(r) any(r %in% comp.w)),, drop = FALSE]
         #a <- Et[apply(Et, 1, function(r) any(r %in% comp.w)),, drop = FALSE]
-        #a <- x.edge[apply(x.edge, 1, function(r) any(r %in% comp.w)),, drop = FALSE]
+        a <- x.edge[apply(x.edge, 1, function(r) any(r %in% comp.w)),, drop = FALSE]
         # Add edge (v,w) to the spanning tree
-        #a <- rbind(a, E[e,])
+        a <- rbind(a, E[e,])
         # Create graph
-        #a <- graph_from_edgelist(a, directed = FALSE)
+        a <- graph_from_edgelist(a, directed = FALSE)
         # use mst to create uinique spanning tree of the edges
-        #a <- mst(a)
+        a <- mst(a)
         # Change back into edge list
-        #a <- as_edgelist(a)
+        a <- as_edgelist(a)
         
         # Graph Et
         #graphEt <- graph_from_edgelist(Et[-1, ], directed = FALSE)
@@ -108,19 +108,20 @@ RandomnessRecycler <- function(n.nodes, p, q) {
         Et <- Et[!apply(Et, 1, function(r) any(r %in% as.vector(comp.w))),, drop = FALSE]
         
         # Sample edges from the spanning tree
-        #rho <- p/q
-        #t <- sample(c(1,0), size = nrow(a), replace = TRUE, 
-        #         prob = c(rho/(1-p+rho),(1-p)/(1-p+rho)))
+        rho <- p/q
+        t <- sample(c(1,0), size = nrow(a), replace = TRUE, 
+                 prob = c(rho/(1-p+rho),(1-p)/(1-p+rho)))
         
         # Set edge states
-        #x.mat[a] <- t
+        x.mat[a] <- t
+        x.mat <- SymMat(x.mat)
         #x.mat[a[,c(2,1)]] <- t
         
         # Add the spanning tree back into Et
-        #Et <- rbind(Et, a)
+        Et <- rbind(Et, a)
         # Set edge to zero
-        x.mat[E[e,1], E[e,2]] <- 0
-        x.mat[E[e,2], E[e,1]] <- 0
+        #x.mat[E[e,1], E[e,2]] <- 0
+        #x.mat[E[e,2], E[e,1]] <- 0
         
       }
     }
