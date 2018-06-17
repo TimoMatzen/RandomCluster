@@ -19,11 +19,11 @@
 SampleRC <- function(p, q, n.nodes, n.iter, verbose = TRUE, mat = FALSE) {
   
   # Starting at a higher number of runs when network is large.
-  #if(n.nodes < 5 ) {
-   # M <- 2^(0:10)
-  #} else {
-  M <- 2^(5:20)
-  #}
+  if(n.nodes < 10 ) {
+    M <- 2^(0:20)
+  } else {
+  M <- 2^(6:20)
+  }
   # Calculate the number of edges
   n.edges <- edges(n.nodes)
   

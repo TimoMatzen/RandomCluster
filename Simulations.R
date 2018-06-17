@@ -17,8 +17,8 @@ degree.RC <- rep(0,length(p))
 for (i in 1:length(p)){
   par (mfrow = c(1,2))
   # Take a network sample 
-  RC.samp1 <- SampleRC(p[i], q, n.nodes, 1, mat = TRUE )
-
+  RC.samp1 <- SampleRC(p, q, n.nodes, 1, mat = TRUE )
+  qgraph(RC.samp1)
   # Save the mean degrees
   degree.RC[i] <- mean(rowSums(RC.samp1))
   
@@ -56,10 +56,11 @@ qgraph(ER.samp1, layout = RC$layout)
 
 ### Simulate the degree distribution
 
+sqrt(2)/(1 + sqrt(2))
 # Set number of iterations
 n.iter <- 1000
 # Set parameters
-p <- .7
+p <- .4
 # Ising model 
 q <- 2
 # Set number of nodes
@@ -88,6 +89,6 @@ for (i in 1:n.iter) {
 
 
 par(mfrow = c(1,1))
-boxplot(degree.RC, degree.ER, main = "RC(p=.7, q=2) vs ER(p=.7) with 1000 iterations and 10 nodes.",
+boxplot(degree.RC, degree.ER, main = "RC(p=.4, q=2) vs ER(p=.4) with 1000 iterations and 10 nodes.",
         col = c(5,6),  names = c('RC', 'ER'))
-
+q/

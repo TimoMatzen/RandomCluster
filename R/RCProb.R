@@ -17,15 +17,16 @@ RCProb <- function(conf, p,q,n.nodes, Curie = F){
     stop('Can not use Curie-Weiss partition function when q != 2')
   }
   # Calculate maximum number of edges.
-  n.edges <- n.nodes*((n.nodes-1)/2)
+  n.edges <- edges(n.nodes)
   # Check whether configuration and network are compatible
   if(n.edges != length(conf)){
     stop('Edges are not as expected from the number of nodes')
   }
   # Create edgelist
   mat <- matrix(NA, n.nodes, n.nodes)
-  mat[upper.tri(mat)] <- seq(1:n.edges) 
-  edge.list<- which(mat > 0, arr.ind = T )
+  mat[upper.tri(mat)] <- conf
+  mat <- SymMat(mat)
+  diag(mat) <- 0
   
   # Create Omega
   if(q != 1 & Curie == F){
@@ -48,15 +49,18 @@ RCProb <- function(conf, p,q,n.nodes, Curie = F){
       net <- graph_from_data_frame(d = matrix(edge.list[omega[i,]!=0,], ncol = 2),
                                    vertices = seq(1:n.nodes), directed = F)
       k <- components(net)$no
-      p1[i] <- prod(apply(matrix(omega[i,], nrow = 1),2,prod,p=p))*q^k
+      p1[i] <- prod(apply(omega[i,, drop = FALSE],2,b, p=p,q=q,k=k))
       Zrc <- Zrc + p1[i]
     }
   }
+  net <- graph_from_adjacency_matrix(mat, mode = "undirected")
   
-  net <- graph_from_data_frame(d = matrix(edge.list[conf != 0,], ncol = 2),
-                               vertices = seq(1:n.nodes), directed = F)
+  #net <- graph_from_data_frame(d = matrix(edge.list[conf != 0,], ncol = 2),
+                               #vertices = seq(1:n.nodes), directed = F)
   k <- components(net)$no
-  prob <- (prod(apply(matrix(conf,nrow = 1),2,prod,p = p))*q^k)/(Zrc)
+  prob <- (prod(apply(matrix(conf,nrow = 1),2,b,p = p))*q^k)/(Zrc)
+  #prob <- (prod(conf, p)*q^k)/Zrc
+  #prob <- (prod(apply(matrix(conf,nrow = 1),2,prod,p = p))*q^k)/(Zrc)
   #p1 <- p1/Zrc
   #dat <- cbind(omega, p1)
   return(prob)

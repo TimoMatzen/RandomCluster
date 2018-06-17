@@ -64,7 +64,7 @@ ZC <- function(n.nodes, p) {
   Z <- 0
   # Vervolgens loopen over alle nodes.
   for (i in 0:n.nodes){
-    Z <- Z + (choose(n.nodes,i)*exp((.5*sig)*(2*i-n)^2))
+    Z <- Z + (choose(n.nodes,i)*exp((.5*sig)*(2*i-n.nodes)^2))
   }
   # Om de partitie functie van curie-weiss gelijk te krijgen aan die van het RC nog
   # vermenigvuldigen met een term die afhangt van sigma en het aantal nodes.
@@ -77,7 +77,7 @@ ZC <- function(n.nodes, p) {
 # p: edge probability
 #
 # @keyword internal
-prod <- function(x,p){
+b <- function(x,p){
   p^(x)*(1-p)^(1-x)
 }
 
