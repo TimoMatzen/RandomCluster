@@ -1,7 +1,7 @@
 ## Simulation with the Randomness Recycler
 n.iter <- 5000
-n.nodes <- 5
-p <- .5
+n.nodes <- 10
+p <- .8
 n.edges <- edges(n.nodes)
 samp <- matrix(0,nrow = n.iter, ncol = n.edges)
 for (i in 1:n.iter) {
