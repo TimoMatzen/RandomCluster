@@ -7,88 +7,110 @@ library(qgraph)
 ## Simulate mean degrees with changing p
 
 # Set parameters
-p <- seq(.1,.7,.01)
+p <- seq(.1,.9, .05)
 # Ising model 
 q <- 2
 # Set number of nodes
 n.nodes <- 10
 # Vector to save mean degrees
-degree.RC <- rep(0,length(p))
+degree.RC <- rep(NA,length(p))
 for (i in 1:length(p)){
-  par (mfrow = c(1,2))
-  # Take a network sample 
-  RC.samp1 <- SampleRC(p, q, n.nodes, 1, mat = TRUE )
-  qgraph(RC.samp1)
-  # Save the mean degrees
-  degree.RC[i] <- mean(rowSums(RC.samp1))
+  print(paste0("Now sampling with ", p[i]))
+  deg <- rep(NA, 1000)
+  for (j in 1:1000){
+    
+    par (mfrow = c(1,2))
+    # Take a network sample 
+    RC.samp1 <- RandomnessRecycler(n.nodes, p[i],  2)
+    # Save the mean degrees
+    deg[j] <- mean(rowSums(RC.samp1))
   
-
-  # Plot the structure of the network
-  #RC <- qgraph(RC.samp1)
+    # Plot the structure of the network
+    #RC <- qgraph(RC.samp1)
+    print(j)
+  }
+  degree.RC[i] <- mean(deg)
+  
 }
-plot(x = p, y = degree.RC, ylab = "Mean Degree", xlab= "p",
-     main = "Random Cluster Degree with q = 2", type = 'l')
-# Plot the degree distribution
-#hist(degree.RC)
+
 
 ## Erdos Renyi random graph
 # Erdos Renyi model 
 
-degree.ER <- rep(0, length(p))
+degree.ER <- rep(NA, length(p))
 for (i in 1:length(p)) {
-  # Take a network sample erdos renyi, q = 1
-  ER.samp1 <- SampleRC(p[i], 1, n.nodes, 1, mat = TRUE )
-
-  # Get the degree of each node
-  degree.ER[i] <- mean(rowSums(ER.samp1))
+  print(paste0("Now sampling with ", p[i]))
+  deg <- rep(NA, 1000)
+  for (j in 1:1000) {
+    # Take a network sample erdos renyi, q = 1
+    #ER.samp1 <- RandomnessRecycler(n.nodes, p[i], 1)
+    ER.samp1 <- erdos.renyi.game(n.nodes, p[i])
+    ER.samp1 <- matrix(get.adjacency(ER.samp1), n.nodes, n.nodes)
+    
+    # Get the degree of each node
+    deg[j] <- mean(rowSums(ER.samp1))
+    print(j)
+  }
+  degree.ER[i] <- mean(deg)
 }
 
-plot(x = p, y = degree.ER, ylab = "Mean Degree", xlab= "p",
-     main = "Erdos-Renyi Degree", type = 'l')
+par(mfrow = c(1,1))
+plot(x = p, y = degree.RC, ylab = "Mean Degree", xlab= "p",
+     main = "Mean degrees Random Cluster vs Erdos Renyi", type = 'l',
+     xaxt = "n", yaxt = "n")
+axis(1, seq(0.1,0.9,0.05), las = 2)
+axis(2, seq(min(degree.RC), max(degree.RC), 1), las = 2)
 
-# Plot the structure of the network
-qgraph(ER.samp1, layout = RC$layout)
-
-
-# Plot the degree distribution
-#hist(degree.ER)
-
+lines(x = p, y = degree.ER, ylab = "Mean Degree", xlab= "p",
+     main = "Erdos-Renyi Degree", type = 'l', col = 'red')
+legend("bottomright", col = c("black", "red"),legend = c("RC (q=2)", "ER (q=1)"), 
+       pch = 1)
 
 ### Simulate the degree distribution
 
-sqrt(2)/(1 + sqrt(2))
 # Set number of iterations
 n.iter <- 1000
 # Set parameters
-p <- .4
+p <- seq(.1,.5,.1)
 # Ising model 
 q <- 2
 # Set number of nodes
 n.nodes <- 10
 # Vector to save mean degrees
-degree.RC <- rep(0,n.iter)
-for (i in 1:n.iter){
-  # Take a network sample 
-  RC.samp1 <- SampleRC(p, q, n.nodes, 1, mat = TRUE )
-  
-  # Save the degree of node 1
-  degree.RC[i] <- rowSums(RC.samp1)[1]
+degree.RC <-matrix(NA, nrow = n.iter, ncol = length(p)) 
+for (j in 1:length(p)) {
+  print(paste0("Sampling with p: ", p[j]))
+  for (i in 1:n.iter){
+    # Take a network sample 
+    RC.samp1 <- RandomnessRecycler( n.nodes,p[j], 2 )
+    
+    # Save the degree of node 1
+    degree.RC[i,j] <- rowSums(RC.samp1)[1]
+    
+    print(i)
+  }
 }
-
 
 ## Erdos Renyi random graph
 # Erdos Renyi model 
 
-degree.ER <- rep(0, n.iter)
+degree.ER <- matrix(NA, nrow = n.iter, ncol = length(p))
 
-for (i in 1:n.iter) {
-  graph <- erdos.renyi.game(n.nodes,p)
-  degree.ER[i] <- rowSums(matrix(get.adjacency(graph), n.nodes, n.nodes))[1]
-
+for (j in 1:length(p)) {
+  print(paste0("Sampling with p: ", p[j]))
+  for (i in 1:n.iter) {
+    graph <- erdos.renyi.game(n.nodes, p[j])
+    degree.ER[i, j] <- rowSums(matrix(get.adjacency(graph), n.nodes, n.nodes))[1]
+  
+    print(i)
+  }
 }
 
 
 par(mfrow = c(1,1))
-boxplot(degree.RC, degree.ER, main = "RC(p=.4, q=2) vs ER(p=.4) with 1000 iterations and 10 nodes.",
-        col = c(5,6),  names = c('RC', 'ER'))
-q/
+boxplot(degree.RC[,5], degree.ER[,5], main = "RC(p=.5, q=2) vs ER(p=.5) with 1000 iterations and 10 nodes.",
+        col = c(5,6),  names = c('RC', 'ER'), yaxt = "n")
+axis(2, seq(0,20,1))
+
+
+

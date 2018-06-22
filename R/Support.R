@@ -3,7 +3,8 @@
 # x: n.nodes
 # 
 # @keyword internal
-edges <- function(x) {
+#' @export
+ed <- function(x) {
   # Takes as input the number of nodes
   # Outputs the number of edges
   y <- x*((x-1)/ 2)

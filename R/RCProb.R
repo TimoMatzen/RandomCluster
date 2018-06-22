@@ -17,20 +17,27 @@ RCProb <- function(conf, p,q,n.nodes, Curie = F){
     stop('Can not use Curie-Weiss partition function when q != 2')
   }
   # Calculate maximum number of edges.
-  n.edges <- edges(n.nodes)
+  n.edges <- ed(n.nodes)
   # Check whether configuration and network are compatible
   if(n.edges != length(conf)){
     stop('Edges are not as expected from the number of nodes')
   }
   # Create edgelist
-  mat <- matrix(NA, n.nodes, n.nodes)
-  mat[upper.tri(mat)] <- conf
-  mat <- SymMat(mat)
-  diag(mat) <- 0
+  #mat <- matrix(NA, n.nodes, n.nodes)
+  #mat[upper.tri(mat)] <- conf
+  #mat <- SymMat(mat)
+  #diag(mat) <- 0
+  #edge.list<- which(mat > 0, arr.ind = T )
+  # Creeren edgelist
+  mat <- matrix(NA,n.nodes, n.nodes)
+  mat[upper.tri(mat)] <- seq(1:n.edges)
+  edge.list<- which(mat > 0, arr.ind = T )
   
   # Create Omega
   if(q != 1 & Curie == F){
-    l <- rep(list(0:1), n.edges); omega <- as.matrix(expand.grid(l))
+    l <- rep(list(0:1), n.edges)
+    omega <- as.matrix(expand.grid(l))
+    
   }
   # Initialiseer Zrc op 0
   Zrc <- 0
@@ -49,11 +56,17 @@ RCProb <- function(conf, p,q,n.nodes, Curie = F){
       net <- graph_from_data_frame(d = matrix(edge.list[omega[i,]!=0,], ncol = 2),
                                    vertices = seq(1:n.nodes), directed = F)
       k <- components(net)$no
-      p1[i] <- prod(apply(omega[i,, drop = FALSE],2,b, p=p,q=q,k=k))
+      p1[i] <- (prod(apply(omega[i,, drop = FALSE],2,b,p = p))*q^k)
       Zrc <- Zrc + p1[i]
     }
   }
-  net <- graph_from_adjacency_matrix(mat, mode = "undirected")
+  
+  # Current configuration
+  conf.mat <- matrix(0, n.nodes, n.nodes)
+  conf.mat[upper.tri(conf.mat)] <- conf
+  conf.mat <- SymMat(conf.mat)
+  
+  net <- graph_from_adjacency_matrix(conf.mat, mode = "undirected")
   
   #net <- graph_from_data_frame(d = matrix(edge.list[conf != 0,], ncol = 2),
                                #vertices = seq(1:n.nodes), directed = F)
@@ -65,4 +78,5 @@ RCProb <- function(conf, p,q,n.nodes, Curie = F){
   #dat <- cbind(omega, p1)
   return(prob)
 }
+
 
