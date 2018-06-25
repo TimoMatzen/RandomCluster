@@ -15,43 +15,44 @@
 KLdivergence <- function (x, n.nodes, p.true, p.mod) {
   
   # First calculate the Random Cluster partition function
-  # With q = 2 the Curie Weiss partition function can be used
-  #Zrc <- ZC(n.nodes, p.mod)
-  #mat <- matrix(0, n.nodes, n.nodes)
-  # Loop over every configuration
-  #div <- 0
-  #for (i in 1:nrow(x)) {
-   # Create adjacency matrix
-   #mat[upper.tri(mat)] <- x[i,]
-   #mat <- SymMat(mat)
-    
-   # Make graph object from adjacency matrix
-   #graph <- graph_from_adjacency_matrix(mat, mode = "undirected")
-    
-  # Calculate the number of components in the graph
-   #k <- components(graph)$no
-   # Calculate Erdos-Renyi prob; q = 1
-   #Pr <- RCProb(x[i,], p.true, 1,  n.nodes)
-   #Prc <- prod(apply(x[i,,drop = FALSE],2,b, p = p.mod), 2^k)
-   #Prc <- RCProb(x[i, ], p.mod, q = 2, n.nodes, Curie = TRUE)
-    # Calculate KL divergence
-   #div <- div +  ((log(Pr) + log(Zrc) - 
-                    # log(prod(apply(x[i,,drop = FALSE],2,b, p = p.mod))) + log(2^k))  * Pr)
-   #div <- div + (log(Pr) + log(Zrc) - log())
-   #div <- div + ( (log(Pr) + log(Zrc) - log(prod(apply(x[i,,drop = FALSE],2,b, p = p.mod))) + log(2^k)) * Pr)
-     
-   #}
-  
-  # Multiply by log(Zrc)-log(2) to get KLdivergence
-   #div <- (log(Zrc)) - log(2) * div
-  
+ 
+  n.edges <- edges(n.nodes)
+  # Calculate the KL divergence if p.mod!=p.true
+  if (p.true != p.mod) {
   # Calculte the KL divergence
-  div <- 0
-  for (i in 1:nrow(x)) {
-    Per <- RCProb(x[i,], p.true, q = 1, n.nodes)
-    Prc <- RCProb(x[i, ], p.mod, q = 2, n.nodes, Curie = TRUE)
-    div <- div + ( Per * log(Per/Prc))
-   
+    div <- 0
+    for (i in 1:nrow(x)) {
+      Per <- RCProb(x[i,], p.true, q = 1, n.nodes)
+      Prc <- RCProb(x[i, ], p.mod, q = 2, n.nodes, Curie = TRUE)
+      div <- div + ( Per * log(Per/Prc))
+     
+    }
+  } else {
+    # Get partition with curie-weiss approximation
+    Z <- ZC(n.nodes, p.true)
+    
+    # Set div to 0
+    div <- 0
+      for (i in 1:nrow(x)) {
+      
+     
+      # Calculate components
+      mat <- matrix(NA,n.nodes, n.nodes)
+      mat[upper.tri(mat)] <- x[i,]
+      mat <- SymMat(mat)
+      net <- graph_from_adjacency_matrix(mat, mode = "undirected")
+      k <- components(net)$no
+      
+      # Calculate ER prob
+      Per <- RCProb(x[i, ], p.true, q = 1, n.nodes)
+      
+      # Calculate KL divergence with rewritten equation when p.true == p.mod
+      div <- div +  (k  * Per)
+      
+      
+      }
+    # Multiply div by log(z) - log(2)
+    div <- log(Z) - (log(2) * div)
   }
   
   # Return the kl divergence between the models
