@@ -44,7 +44,7 @@ KLdivergence <- function (x, n.nodes, p.true, p.mod) {
       k <- components(net)$no
       
       # Calculate ER prob
-      Per <- RCProb(x[i, ], p.true, q = 1, n.nodes)
+      Per <- (RCProb(x[i, ], p.true, q = 1, n.nodes))/nrow(x) # Normalize the probability value
       
       # Calculate KL divergence with rewritten equation when p.true == p.mod
       div <- div +  (k  * Per)
