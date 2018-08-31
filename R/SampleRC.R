@@ -1,5 +1,3 @@
-# TODO: Add possibility to also sample with Randomness Recycler
-
 #' Sample Random Cluster
 #' 
 #' Function to sample from the Random Cluster model. Currently this function works with 
@@ -25,10 +23,10 @@ SampleRC <- function(p, q, n.nodes, n.iter, verbose = TRUE, mat = FALSE) {
   M <- 2^(6:20)
   }
   # Calculate the number of edges
-  n.edges <- edges(n.nodes)
+  n.edges <- ed(n.nodes)
   
   # Matrix to save samples
-  output <- matrix(1,ncol = n.edges, nrow = n.iter)
+  output <- matrix(1, ncol = n.edges, nrow = n.iter)
   for (iter in 1:n.iter) {
     # Set empty set
     s1 <- rep(0, n.edges)

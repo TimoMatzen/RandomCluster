@@ -16,7 +16,7 @@ KLdivergence <- function (x, n.nodes, p.true, p.mod) {
   
   # First calculate the Random Cluster partition function
  
-  n.edges <- edges(n.nodes)
+  n.edges <- ed(n.nodes)
   # Calculate the KL divergence if p.mod!=p.true
   if (p.true != p.mod) {
   # Calculte the KL divergence
@@ -44,7 +44,7 @@ KLdivergence <- function (x, n.nodes, p.true, p.mod) {
       k <- components(net)$no
       
       # Calculate ER prob
-      Per <- (RCProb(x[i, ], p.true, q = 1, n.nodes))/nrow(x) # Normalize the probability value
+      Per <- (RCProb(x[i, ], p.true, q = 1, n.nodes)) # Normalize the probability value
       
       # Calculate KL divergence with rewritten equation when p.true == p.mod
       div <- div +  (k  * Per)

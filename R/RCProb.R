@@ -8,6 +8,7 @@
 #' @param n.nodes The number of nodes in the network
 #' @param Curie Whether to use the Curie-Weiss partition function, is only possible when q = 2.
 #' 
+#' 
 #' @return Returns the configuration probability.
 #' 
 #' @export
@@ -44,6 +45,9 @@ RCProb <- function(conf, p,q,n.nodes, Curie = F){
   # Wanneer q is 1, gelijkstellen aan erdos renyi en p teruggeven
   if(q == 1){
     p <- prod(apply(matrix(conf,nrow = 1),2,b,p = p))
+    
+    # Log likelihood
+    #p <- (sum(conf)*log(p)+((length(conf)) - sum(conf))*log(1-p))
     return(p)
   }
   if(Curie == T){ # Use the Curie Weiss partition function
@@ -71,7 +75,12 @@ RCProb <- function(conf, p,q,n.nodes, Curie = F){
   #net <- graph_from_data_frame(d = matrix(edge.list[conf != 0,], ncol = 2),
                                #vertices = seq(1:n.nodes), directed = F)
   k <- components(net)$no
+  
+  # Normalize
   prob <- (prod(apply(matrix(conf,nrow = 1),2,b,p = p))*q^k)/(Zrc)
+   #prob <- (sum(conf)*log(p)+((length(conf)) - sum(conf))*log(1-p) + (k * log(q)))-log(Zrc)
+
+  
   #prob <- (prod(conf, p)*q^k)/Zrc
   #prob <- (prod(apply(matrix(conf,nrow = 1),2,prod,p = p))*q^k)/(Zrc)
   #p1 <- p1/Zrc

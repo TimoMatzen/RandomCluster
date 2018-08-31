@@ -14,6 +14,8 @@ GibbsRC(t, p, q, n.nodes, burnin = 50)
 \item{q}{The clustering coefficient of the Random Cluster model}
 
 \item{n.nodes}{The number of nodes in the configuration}
+
+\item{burnin}{Burnin period for the markov chain}
 }
 \value{
 The sampled configurations; minus the burnin

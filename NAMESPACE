@@ -2,7 +2,10 @@
 
 export(GibbsRC)
 export(KLdivergence)
+export(RC)
 export(RCProb)
 export(RandomnessRecycler)
 export(SampleRC)
+export(SymMat)
+export(ZC)
 export(ed)

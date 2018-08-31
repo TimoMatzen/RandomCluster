@@ -57,7 +57,7 @@ transition <- function(n.nodes, s, U, r ,p, q) {
 # @return Returns the normalizing constant for the Random Cluster model with q = 2.
 # 
 # @keyword internal
-# 
+#' @export
 ZC <- function(n.nodes, p) {
   # Eerst moet sigma berekend worden, afgeleid van Maartens document
   sig <- (log(1-p))/-2
@@ -65,11 +65,11 @@ ZC <- function(n.nodes, p) {
   Z <- 0
   # Vervolgens loopen over alle nodes.
   for (i in 0:n.nodes){
-    Z <- Z + (choose(n.nodes,i)*exp((.5*sig)*(2*i-n.nodes)^2))
+    Z <- Z + (choose(n.nodes, i) * exp((.5*sig) * (2*i - n.nodes)^2))
   }
   # Om de partitie functie van curie-weiss gelijk te krijgen aan die van het RC nog
   # vermenigvuldigen met een term die afhangt van sigma en het aantal nodes.
-  Z <- Z*exp((-.5*sig*n.nodes^2))
+  Z <- Z * exp((-.5*sig*n.nodes^2))
   return(Z)
 }
 # Product function numerator Random Cluster function
@@ -87,6 +87,7 @@ b <- function(x,p){
 # m: Matrix
 #
 # return: Symmetric matrix
+#' @export
 SymMat <- function(m) {
   m[lower.tri(m)] <- t(m)[lower.tri(m)]
   m
@@ -100,6 +101,7 @@ SymMat <- function(m) {
 # q: Clustering measure from the Random Cluster model
 #
 # @keyword internal
+#' @export 
 
 RC <- function(n.nodes, s, p, q) {
   # Create empty adjacency matrix

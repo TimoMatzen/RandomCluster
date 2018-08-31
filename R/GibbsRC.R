@@ -6,6 +6,7 @@
 #' @param p The wiring probability
 #' @param q The clustering coefficient of the Random Cluster model
 #' @param n.nodes The number of nodes in the configuration
+#' @param burnin Burnin period for the markov chain
 #' 
 #' @return The sampled configurations; minus the burnin
 #' 
